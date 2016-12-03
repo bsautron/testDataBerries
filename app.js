@@ -22,9 +22,13 @@ connection.query("INSERT INTO people(name, age) VALUES ('Benoit','26'),('Guillau
 
 app.get('/user', (req, res) => {
 
-	let sql = 'SELECT name, age FROM people WHERE name = ' + connection.escape(req.query.name)
+	const sql = `SELECT name, age FROM people WHERE name = ${connection.escape(req.query.name)}`;
 
 	connection.query(sql, (err, results) => {
+		if (err) return res.status(500).json({
+			error: err
+		});
+
 		if (results.length === 0) {
 			res.status(203).json({
 				error: "NO DATA :("
@@ -38,6 +42,4 @@ app.get('/user', (req, res) => {
 	})
 })
 
-.listen(8080, () => {
-	console.log('THE API LISTEN ON htpp://localhost:8080/')
-})
+.listen(8080, () => console.log('THE API LISTEN ON htpp://localhost:8080/'))
